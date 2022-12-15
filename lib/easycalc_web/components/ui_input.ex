@@ -15,5 +15,6 @@ defmodule UI.Input do
 
   def parse(value) do
     Enum.map(value, &Buttons.parse_value/1)
+    |> Enum.reverse()
   end
 end

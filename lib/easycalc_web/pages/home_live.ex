@@ -1,10 +1,10 @@
 defmodule EasycalcWeb.Pages.HomeLive do
   use Surface.LiveView
 
-  alias Easycalc.Buttons
+  alias Easycalc.{Buttons, Logic}
 
-  data result, :number, default: 420
-  data queue, :list, default: ["num_1", "plus", "num_2"]
+  data result, :number, default: 0
+  data queue, :list, default: []
 
   def render(assigns) do
     ~F"""
@@ -14,12 +14,21 @@ defmodule EasycalcWeb.Pages.HomeLive do
           <UI.Result result={@result} />
           <UI.Functions />
           <UI.Grid cols="4" gap="2">
-            {#for {label, action} <- Buttons.all()}
+            {#for { label, action } <- Buttons.all()}
               <UI.Button label={label} operation={action}/>
             {/for}
           </UI.Grid>
         </UI.Calculator>
       </UI.MainContainer>
     """
+  end
+
+  def handle_event(op, _, socket) do
+    assigns = socket.assigns
+    queue = assigns.queue
+    state = {queue, 0}
+    { queue, result } = Logic.new_operation(state, op)
+    socket = assign(socket, queue: queue, result: result)
+    { :noreply, socket }
   end
 end
