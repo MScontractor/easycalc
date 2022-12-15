@@ -1,44 +1,25 @@
 defmodule EasycalcWeb.Pages.HomeLive do
   use Surface.LiveView
 
-  def buttons() do
-    [
-      {"C", "clear"},
-      {"()", "noop"},
-      {"%", "percent"},
-      {"/", "div"},
-      {"7", "num_7"},
-      {"8", "num_8"},
-      {"9", "num_9"},
-      {"x", "mult"},
-      {"4", "num_4"},
-      {"5", "num_5"},
-      {"6", "num_6"},
-      {"-", "minus"},
-      {"1", "num_1"},
-      {"2", "num_2"},
-      {"3", "num_3"},
-      {"+", "plus"},
-      {"+/-", "invert"},
-      {"0", "num_0"},
-      {".", "dot"},
-      {"+", "equal"}
-    ]
-  end
+  alias Easycalc.Buttons
+
+  data result, :number, default: 420
+  data queue, :list, default: ["num_1", "plus", "num_2"]
+
   def render(assigns) do
     ~F"""
-      <div class="container mx-auto bg-gray-300 min-h-screen flex items-center justify-center">
-        <div class="card w-64 bg-base-100 shadow-xl rounded-lg p-2">
-          <UI.Input />
-          <UI.Result />
-          <UI.OptionalButtons />
+      <UI.MainContainer>
+        <UI.Calculator>
+          <UI.Input input={@queue} />
+          <UI.Result result={@result} />
+          <UI.Functions />
           <UI.Grid cols="4" gap="2">
-            {#for {label, _action} <- buttons()}
-              <UI.Button label={label} />
+            {#for {label, action} <- Buttons.all()}
+              <UI.Button label={label} operation={action}/>
             {/for}
           </UI.Grid>
-        </div>
-      </div>
+        </UI.Calculator>
+      </UI.MainContainer>
     """
   end
 end

@@ -1,4 +1,4 @@
-defmodule UI.OptionalButtons do
+defmodule UI.Functions do
   use Surface.Component
 
   def render(assigns) do
